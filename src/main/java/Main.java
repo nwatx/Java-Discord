@@ -10,6 +10,8 @@ import javax.security.auth.login.LoginException;
 import java.util.Arrays;
 
 public class Main extends ListenerAdapter {
+    private Commands cmd = new Commands();
+
     public static void main(String[] args) throws LoginException {
         JDABuilder builder = new JDABuilder(AccountType.BOT).setToken(Config.BOT_TOKEN);
         builder.addEventListeners(new Main());
@@ -23,11 +25,28 @@ public class Main extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        System.out.print(Arrays.asList(event.getAuthor(), event.getChannel()));
+        System.out.println("Execution [author, channel]: " + Arrays.asList(event.getAuthor(), event.getChannel()));
         if(event.getAuthor().isBot()) {
             return;
         }
 
-        event.getChannel().sendMessage("Hello World").queue();
+        System.out.println("Message content: " + event.getMessage().getContentRaw());
+
+        try {
+            String[] content = event.getMessage().getContentRaw().split(" ");
+            String command = content[0].substring(1);
+
+            System.out.println(Arrays.asList(command, content));
+
+            switch(command) {
+                case "help": cmd.help(event); break;
+                case "owner": cmd.owner(event); break;
+                case "kick": cmd.kick(event, content[1]);
+            }
+        } catch(Exception e) {
+            System.out.println("Invalid command");
+        }
+
+        //event.getChannel().sendMessage("Hello World").queue();
     }
 }
