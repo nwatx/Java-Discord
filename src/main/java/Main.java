@@ -33,10 +33,10 @@ public class Main extends ListenerAdapter {
         System.out.println("Message content: " + event.getMessage().getContentRaw());
 
         try {
-            String[] content = event.getMessage().getContentRaw().split(" ");
+            String[] content = event.getMessage().getContentRaw().split("\\s+");
             String command = content[0].substring(1);
 
-            System.out.println(Arrays.asList(command, content));
+            System.out.println(Arrays.asList(command, Arrays.toString(content)));
 
             switch(command) {
                 case "help": cmd.help(event); break;
