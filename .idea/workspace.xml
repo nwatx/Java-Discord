@@ -20,6 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="892a8ba3-6635-4489-a4d0-0c18e043d192" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/libs/WolframAlpha-1.1.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/fileContent/fileContent.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/fileContent/fileContent.lock" afterDir="false" />
@@ -27,9 +28,17 @@
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/classAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/Commands.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/Commands.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/Config.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/Config.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/java/main/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Commands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Config.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -59,11 +68,21 @@
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
-  <component name="RunManager">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Documents\GitHub\Java-Discord\libs" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Documents\GitHub\Java-Discord" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="Java-Discord.main" />
@@ -71,8 +90,28 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Java-Discord [dependencies]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="dependencies" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.Java-Discord [dependencies]" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -111,22 +150,30 @@
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="830" y="263" key="#com.intellij.ide.util.MemberChooser/0.0.2048.1112@0.0.2048.1112" timestamp="1592262996762" />
-    <state width="2005" height="305" key="GridCell.Tab.0.bottom" timestamp="1592343474093">
+    <state x="729" y="298" key="FileChooserDialogImpl" timestamp="1592447001382">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2005" height="305" key="GridCell.Tab.0.bottom/0.0.2048.1112@0.0.2048.1112" timestamp="1592343474093" />
-    <state width="2005" height="305" key="GridCell.Tab.0.center" timestamp="1592343474093">
+    <state x="729" y="298" key="FileChooserDialogImpl/0.0.2048.1112@0.0.2048.1112" timestamp="1592447001382" />
+    <state width="1002" height="264" key="GridCell.Tab.0.bottom" timestamp="1592450558388">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2005" height="305" key="GridCell.Tab.0.center/0.0.2048.1112@0.0.2048.1112" timestamp="1592343474093" />
-    <state width="2005" height="305" key="GridCell.Tab.0.left" timestamp="1592343474093">
+    <state width="1002" height="264" key="GridCell.Tab.0.bottom/0.0.2048.1112@0.0.2048.1112" timestamp="1592450558388" />
+    <state width="1002" height="264" key="GridCell.Tab.0.center" timestamp="1592450558388">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2005" height="305" key="GridCell.Tab.0.left/0.0.2048.1112@0.0.2048.1112" timestamp="1592343474093" />
-    <state width="2005" height="305" key="GridCell.Tab.0.right" timestamp="1592343474093">
+    <state width="1002" height="264" key="GridCell.Tab.0.center/0.0.2048.1112@0.0.2048.1112" timestamp="1592450558388" />
+    <state width="1002" height="264" key="GridCell.Tab.0.left" timestamp="1592450558388">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2005" height="305" key="GridCell.Tab.0.right/0.0.2048.1112@0.0.2048.1112" timestamp="1592343474093" />
+    <state width="1002" height="264" key="GridCell.Tab.0.left/0.0.2048.1112@0.0.2048.1112" timestamp="1592450558388" />
+    <state width="1002" height="264" key="GridCell.Tab.0.right" timestamp="1592450558388">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="1002" height="264" key="GridCell.Tab.0.right/0.0.2048.1112@0.0.2048.1112" timestamp="1592450558388" />
+    <state x="550" y="89" key="SettingsEditor" timestamp="1592448125174">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="550" y="89" key="SettingsEditor/0.0.2048.1112@0.0.2048.1112" timestamp="1592448125174" />
     <state x="687" y="243" width="672" height="678" key="search.everywhere.popup" timestamp="1592342710596">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>

@@ -1,11 +1,9 @@
 import net.dv8tion.jda.api.AccountType;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 import java.util.Arrays;
 
@@ -32,16 +30,25 @@ public class Main extends ListenerAdapter {
 
         System.out.println("Message content: " + event.getMessage().getContentRaw());
 
-        try {
-            String[] content = event.getMessage().getContentRaw().split("\\s+");
-            String command = content[0].substring(1);
+        if(!event.getMessage().getContentRaw().startsWith("!")) {
+            return;
+        }
 
-            System.out.println(Arrays.asList(command, Arrays.toString(content)));
+        try {
+            String[] content = event.getMessage().getContentRaw().split("\\s+"); //splits content by whitespace
+            String command = content[0].substring(1); //gets everything past the prefix
+            command = command.toLowerCase(); //changes the command to lowercase so caps don't mess it up
+
+            System.out.println(Arrays.asList(command, Arrays.toString(content))); //prints out the command and its content split
+
 
             switch(command) {
                 case "help": cmd.help(event); break;
                 case "owner": cmd.owner(event); break;
-                case "kick": cmd.kick(event, content[1]);
+                case "kick": cmd.kick(event, content[1]); break;
+                case "ban": cmd.ban(event, content); break;
+                case "unban": cmd.unban(event, content[1]); break;
+                case "solve": cmd.wolframAlpha(event); break;
             }
         } catch(Exception e) {
             System.out.println("Invalid command");

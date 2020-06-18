@@ -1,2 +1,8 @@
 
 *.lock
+*.bin
+*.lock
+*.xml
+build/classes/java/main/Config.class
+src/main/java/Config.java
+src/main/java/Config.java
