@@ -30,7 +30,7 @@ public class Main extends ListenerAdapter {
 
         System.out.println("Message content: " + event.getMessage().getContentRaw());
 
-        if(!event.getMessage().getContentRaw().startsWith("!")) {
+        if(!event.getMessage().getContentRaw().startsWith(Config.PREFIX)) {
             return;
         }
 
