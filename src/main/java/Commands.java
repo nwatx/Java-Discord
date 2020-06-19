@@ -27,7 +27,14 @@ public class Commands {
     }
 
     public void help(MessageReceivedEvent event) {
+        /*
         event.getChannel().sendMessage(commands.toString()).queue();
+         */
+
+        event.getAuthor().openPrivateChannel().queue((channel) ->
+        {
+            channel.sendMessage(commands.toString()).queue();
+        });
     }
 
     public void kick(MessageReceivedEvent event, String userToken) {
