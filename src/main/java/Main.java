@@ -7,40 +7,25 @@ import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 import java.util.Arrays;
 
 public class Main extends ListenerAdapter {
-    private Commands cmd = new Commands();
+    private final Commands cmd = new Commands();
 
-    public static void main(String[] args) throws LoginException {
-        try
-        {
+    public static void main(String[] args) throws LoginException, InterruptedException {
             JDA jda = new JDABuilder(Config.BOT_TOKEN)         // The token of the account that is logging in.
                     .addEventListeners(new Main())  // An instance of a class that will handle events.
                     .build();
             jda.awaitReady(); // Blocking guarantees that JDA will be completely loaded.
             System.out.println("Finished Building JDA!");
-        }
-        catch (LoginException e)
-        {
-            //If anything goes wrong in terms of authentication, this is the exception that will represent it
-            e.printStackTrace();
-        }
-        catch (InterruptedException e)
-        {
-            //Due to the fact that awaitReady is a blocking method, one which waits until JDA is fully loaded,
-            // the waiting can be interrupted. This is the exception that would fire in that situation.
-            //As a note: in this extremely simplified example this will never occur. In fact, this will never occur unless
-            // you use awaitReady in a thread that has the possibility of being interrupted (async thread usage and interrupts)
-            e.printStackTrace();
-        }
     }
 
     @Override
-    public void onReady(ReadyEvent event) {
+    public void onReady(@NotNull ReadyEvent event) {
         super.onReady(event);
     }
 
@@ -74,6 +59,7 @@ public class Main extends ListenerAdapter {
                 case "solve": cmd.wolframAlpha(event); break;
                 case "eval": cmd.eval(event); break;
                 case "clear": cmd.clear(event, content); break;
+                case "info": cmd.getUserInfo(event);
             }
         } catch(Exception e) {
             System.out.println("Invalid command");

